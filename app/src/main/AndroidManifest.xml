@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-        <activity android:name=".ViewCasa"></activity>
+        <activity android:name=".ViewCasa" />
         <activity android:name=".Maps" />
         <activity android:name=".Login" />
         <activity android:name=".User" />
@@ -25,7 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FormUser"></activity>
+        <activity android:name=".FormUser" />
+        <activity android:name=".FormCasas"></activity>
     </application>
 
 </manifest>
