@@ -8,6 +8,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,17 +21,22 @@ import java.io.File;
 
 public class LoadImage extends AppCompatActivity
 {
-    private final String CARPETA_RAIZ ="misImagenes/";
-    private final String RUTA_IMAGEN =CARPETA_RAIZ+"misFotos";
-    ImageView image;
-    String path;
+    private final String CARPETA_RAIZ = "misImagenes/";
+    private final String RUTA_IMAGEN = CARPETA_RAIZ + "misFotos";
+
     final int CODE_SELECCIONA = 10;
     final int CODE_FOTO = 20;
+
+    ImageView imagen;
+    String path="";
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_image);
-        image = (ImageView)this.findViewById(R.id.imageLoad);
+
+        imagen = (ImageView)findViewById(R.id.imageLoad);
     }
 
     public void onClick(View view)
@@ -42,13 +48,13 @@ public class LoadImage extends AppCompatActivity
     {
         final  CharSequence[] opciones = {"Tomar Foto", "Cargar Imagen", "Cancelar"};
         final AlertDialog.Builder alertOpciones = new AlertDialog.Builder(LoadImage.this);
-        alertOpciones.setTitle("Seleccione una opcion");
+        alertOpciones.setTitle("Seleccione una Opción");
         alertOpciones.setItems(opciones, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int i) {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 if(opciones[i].equals("Tomar Foto"))
                 {
-                    tomarFotografía();
+                    tomarFotografia();
                 }
                 else if(opciones[i].equals("Cargar Imagen"))
                 {
@@ -58,7 +64,7 @@ public class LoadImage extends AppCompatActivity
                 }
                 else if(opciones[i].equals("Cancelar"))
                 {
-                    dialog.dismiss();
+                    dialogInterface.dismiss();
                 }
             }
         });
@@ -67,23 +73,23 @@ public class LoadImage extends AppCompatActivity
 
     }
 
-    private  void tomarFotografía()
+    private void tomarFotografia()
     {
-        File fileImagen = new File(Environment.getExternalStorageDirectory(),RUTA_IMAGEN);
-        boolean isCreada = fileImagen.exists();
+        File fileImagen = new File(Environment.getExternalStorageDirectory(), RUTA_IMAGEN);
+        boolean isCreada = (boolean) fileImagen.exists();
+
         String nombreImagen="";
 
-        if(isCreada==false)
+        if (isCreada==false)
         {
-            isCreada=fileImagen.mkdir();
+            isCreada=fileImagen.mkdirs();
         }
-        if(isCreada)
+        if (isCreada==true)
         {
             nombreImagen = (System.currentTimeMillis()/1000)+".jpg";
         }
 
         path = Environment.getExternalStorageDirectory()+File.separator+RUTA_IMAGEN+File.separator+nombreImagen;
-
         File imagen = new File(path);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -100,30 +106,36 @@ public class LoadImage extends AppCompatActivity
             {
                 case CODE_SELECCIONA:
                 {
-                    Uri mipath = data.getData();
-                    image.setImageURI(mipath);
+                    Uri miPath = data.getData();
+                    imagen.setImageURI(miPath);
                     break;
                 }
                 case CODE_FOTO:
                 {
                     MediaScannerConnection.scanFile(this, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
                         @Override
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.i("Ruta de almacenamiento","Path: "+path);
+                        public void onScanCompleted(String path, Uri uri)
+                        {
+                            Log.i("Ruta de almacenamiento","Path" + path);
                         }
                     });
 
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    image.setImageBitmap(bitmap);
+                    imagen.setImageBitmap(bitmap);
 
+
+
+                    break;
+                }
+                default:
+                {
                     break;
                 }
             }
 
+
         }
-        else
-        {
-            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show();
-        }
+
     }
 }
+
