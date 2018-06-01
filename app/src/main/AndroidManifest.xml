@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".FormUser" />
-        <activity android:name=".FormCasas"></activity>
+        <activity android:name=".FormCasas" />
+        <activity android:name=".edit"></activity>
     </application>
 
 </manifest>
